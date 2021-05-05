@@ -1,8 +1,13 @@
 require 'rails_helper'
 
+test_email = "test@example.com"
+test_password = "f4k3p455w0rd"
+
 RSpec.feature "Projects", type: :feature do
   context "Create new project" do
     before(:each) do
+      user = User.create!(:email => test_email, :password => test_password)
+      login_as(user, :scope => :user)
       visit new_project_path
       within("form") do
         fill_in "Name", with: "Test Name"
@@ -24,6 +29,8 @@ RSpec.feature "Projects", type: :feature do
   context "Update Project" do
     let(:project) { Project.create(name: "Test Name", description: "Test Content") }
     before(:each) do
+      user = User.create!(:email => test_email, :password => test_password)
+      login_as(user, :scope => :user)
       visit edit_project_path(project)
     end
 
@@ -47,6 +54,8 @@ RSpec.feature "Projects", type: :feature do
   context "Remove existing project" do
     let!(:project) { Project.create(name: "Test name", description: "test content") }
     scenario "remove project" do
+      user = User.create!(:email => test_email, :password => test_password)
+      login_as(user, :scope => :user)
       visit projects_path
       click_link "Destroy"
       expect(page).to have_content("Project was successfully destroyed")
