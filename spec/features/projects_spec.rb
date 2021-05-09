@@ -9,13 +9,13 @@ RSpec.feature "Projects", type: :feature do
       user = User.create!(:email => test_email, :password => test_password)
       login_as(user, :scope => :user)
       visit new_project_path
-      within("form") do
-        fill_in "Name", with: "Test Name"
+      within(".form-inline") do
+        fill_in "project[name]", with: "Test Name"
       end
     end
 
     scenario "should be successful" do
-      fill_in "Description", with: "Test description"
+      fill_in "project[description]", with: "Test description"
       click_button "Create Project"
       expect(page).to have_content("Project was successfully created")
     end
@@ -35,15 +35,15 @@ RSpec.feature "Projects", type: :feature do
     end
 
     scenario "should be successful" do
-      within("form") do
-        fill_in "Description", with: "New description content"
+      within(".form-inline") do
+        fill_in "project[description]", with: "New description content"
       end
       click_button "Update Project"
       expect(page).to have_content("Project was successfully updated")
     end
 
     scenario "should fail" do
-      within("form") do
+      within(".form-inline") do
         fill_in "Description", with: ""
       end
       click_button "Update Project"
@@ -57,7 +57,7 @@ RSpec.feature "Projects", type: :feature do
       user = User.create!(:email => test_email, :password => test_password)
       login_as(user, :scope => :user)
       visit projects_path
-      click_link "Destroy"
+      click_link "Delete"
       expect(page).to have_content("Project was successfully destroyed")
       expect(Project.count).to eq(0)
     end
